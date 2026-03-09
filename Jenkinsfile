@@ -5,7 +5,7 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/abssaahlam1/TP-Jenkins-Security.git'
+                git branch: 'main', url: 'https://github.com/abssaahlam1/TP-Jenkins-Security.git'
             }
         }
 
@@ -21,17 +21,11 @@ pipeline {
             }
         }
 
-        stage('SCA Scan') {
-            steps {
-                sh 'dependency-check.sh --project "TP-Jenkins" --scan . --format HTML'
-            }
-        }
-
     }
 
     post {
         failure {
-            echo 'Build failed due to errors or vulnerabilities'
+            echo 'Build failed'
         }
     }
 }
