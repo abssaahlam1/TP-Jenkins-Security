@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VENV_DIR = 'venv' // Virtual environment folder
+        VENV_DIR = 'venv'
     }
 
     stages {
@@ -16,13 +16,10 @@ pipeline {
         stage('Setup Python Environment') {
             steps {
                 sh '''
-                if [ ! -d "$VENV_DIR" ]; then
-                    python3 -m venv $VENV_DIR
-                fi
-                . $VENV_DIR/bin/activate
-                python -m pip install --upgrade pip
+                python3 -m venv ${VENV_DIR}
+                . ${VENV_DIR}/bin/activate
+                pip install --upgrade pip
                 pip install -r requirements.txt
-                pip install sonar-scanner
                 '''
             }
         }
@@ -30,7 +27,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh '''
-                . $VENV_DIR/bin/activate
+                . ${VENV_DIR}/bin/activate
                 pytest
                 '''
             }
@@ -39,12 +36,11 @@ pipeline {
         stage('SAST Scan') {
             steps {
                 sh '''
-                . $VENV_DIR/bin/activate
                 sonar-scanner \
-                    -Dsonar.projectKey=TP-Jenkins-Security \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=http://<SONARQUBE_SERVER>:9000 \
-                    -Dsonar.login=<SONARQUBE_TOKEN>
+                  -Dsonar.projectKey=TP-Jenkins-Security \
+                  -Dsonar.sources=. \
+                  -Dsonar.host.url=http://<SONARQUBE_SERVER>:9000 \
+                  -Dsonar.login=<SONARQUBE_TOKEN>
                 '''
             }
         }
@@ -52,12 +48,10 @@ pipeline {
         stage('SCA Scan') {
             steps {
                 sh '''
-                /opt/dependency-check/dependency-check.sh \
-                    --project "TP-Jenkins" \
-                    --scan . \
-                    --format HTML \
-                    --out reports/ \
-                    --failOnCVSS 7
+                . ${VENV_DIR}/bin/activate
+                pip install --upgrade pip
+                pip install pip-audit
+                pip-audit
                 '''
             }
         }
@@ -65,11 +59,11 @@ pipeline {
     }
 
     post {
-        success {
-            echo '✅ Build completed successfully!'
-        }
         failure {
-            echo '❌ Build failed due to errors or vulnerabilities'
+            echo '❌ Build failed'
+        }
+        success {
+            echo '✅ Build succeeded'
         }
     }
 }
