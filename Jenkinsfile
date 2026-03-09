@@ -35,13 +35,9 @@ pipeline {
 
         stage('SAST Scan') {
             steps {
-                sh '''
-                sonar-scanner \
-                  -Dsonar.projectKey=TP-Jenkins-Security \
-                  -Dsonar.sources=. \
-                  -Dsonar.host.url=http://<SONARQUBE_SERVER>:9000 \
-                  -Dsonar.login=<SONARQUBE_TOKEN>
-                '''
+                withSonarQubeEnv('MySonarQubeServer') {
+                    sh 'sonar-scanner'
+                }
             }
         }
 
