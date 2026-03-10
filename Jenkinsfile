@@ -36,11 +36,21 @@ pipeline {
         -Dsonar.projectKey=tp-jenkins-security \
         -Dsonar.sources=. \
         -Dsonar.host.url=http://localhost:9000 \
-        -Dsonar.login=YOUR_TOKEN
+        -Dsonar.login=squ_db528f51f9254d00f4bc01dbf4126127c7fcec31
         '''
     }
 }
-
+stage('SCA Scan') {
+    steps {
+        sh '''
+        dependency-check.sh \
+        --project "TP-Jenkins" \
+        --scan . \
+        --format HTML \
+        --failOnCVSS 7
+        '''
+    }
+}
     }
 
     post {
