@@ -28,6 +28,18 @@ pipeline {
                 '''
             }
         }
+        stage('SAST Scan') {
+    steps {
+        sh '''
+        . venv/bin/activate
+        sonar-scanner \
+        -Dsonar.projectKey=tp-jenkins-security \
+        -Dsonar.sources=. \
+        -Dsonar.host.url=http://localhost:9000 \
+        -Dsonar.login=YOUR_TOKEN
+        '''
+    }
+}
 
     }
 
