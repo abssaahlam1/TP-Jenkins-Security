@@ -35,8 +35,8 @@ pipeline {
         sonar-scanner \
         -Dsonar.projectKey=tp-jenkins-security \
         -Dsonar.sources=. \
-        -Dsonar.host.url=http://peaceful_ptolemy:9000
-        -Dsonar.login=squ_db528f51f9254d00f4bc01dbf4126127c7fcec31
+-Dsonar.host.url=http://localhost:9000
+-Dsonar.login=squ_db528f51f9254d00f4bc01dbf4126127c7fcec31
         '''
     }
 }
