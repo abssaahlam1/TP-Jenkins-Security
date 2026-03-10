@@ -45,16 +45,16 @@ pipeline {
         }
 
         stage('SCA Scan') {
-            steps {
-                sh '''
-                dependency-check.sh \
-                    --project "TP-Jenkins" \
-                    --scan . \
-                    --format HTML \
-                    --failOnCVSS 7
-                '''
-            }
-        }
+    steps {
+        sh '''
+        docker run --rm -v $PWD:/src owasp/dependency-check:latest \
+            --project "TP-Jenkins" \
+            --scan /src \
+            --format HTML \
+            --failOnCVSS 7
+        '''
+    }
+}
     }
 
     post {
