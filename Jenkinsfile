@@ -36,7 +36,7 @@ pipeline {
         -Dsonar.projectKey=tp-jenkins-security \
         -Dsonar.sources=. \
 -Dsonar.host.url=http://sonarqube:9000
--Dsonar.login=squ_db528f51f9254d00f4bc01dbf4126127c7fcec31
+-Dsonar.login=squ_9b31746c1f52a882a80e8c1b55cf672da471459a
         '''
     }
 }
