@@ -28,29 +28,33 @@ pipeline {
                 '''
             }
         }
+
         stage('SAST Scan') {
-    steps {
-        sh '''
-        . venv/bin/activate
-        sonar-scanner \
-        -Dsonar.projectKey=tp-jenkins-security \
-        -Dsonar.sources=. \
--Dsonar.host.url=http://sonarqube:9000
--Dsonar.login=squ_9b31746c1f52a882a80e8c1b55cf672da471459a
-        '''
-    }
-}
-stage('SCA Scan') {
-    steps {
-        sh '''
-        dependency-check.sh \
-        --project "TP-Jenkins" \
-        --scan . \
-        --format HTML \
-        --failOnCVSS 7
-        '''
-    }
-}
+            steps {
+                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                    . venv/bin/activate
+                    sonar-scanner \
+                        -Dsonar.projectKey=tp-jenkins-security \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://sonarqube:9000 \
+                        -Dsonar.login=$SONAR_TOKEN
+                    '''
+                }
+            }
+        }
+
+        stage('SCA Scan') {
+            steps {
+                sh '''
+                dependency-check.sh \
+                    --project "TP-Jenkins" \
+                    --scan . \
+                    --format HTML \
+                    --failOnCVSS 7
+                '''
+            }
+        }
     }
 
     post {
