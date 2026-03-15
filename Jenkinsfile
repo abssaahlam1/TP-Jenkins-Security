@@ -37,7 +37,7 @@ pipeline {
             /opt/sonar-scanner/bin/sonar-scanner \
                 -Dsonar.projectKey=tp-jenkins-security \
                 -Dsonar.sources=. \
-                -Dsonar.host.url=http://sonarqube:9000 \
+                 -Dsonar.host.url=http://172.18.0.2:9000
                 -Dsonar.login=$SONAR_TOKEN
             '''
         }
