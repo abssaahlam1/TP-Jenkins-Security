@@ -44,19 +44,18 @@ pipeline {
             }
         }
 
-        stage('SCA Scan') {
-            steps {
-                sh '''
-                        dependencyCheck additionalArguments: '--project "TP-Jenkins" --format HTML --failOnCVSS 7'
+       stage('SCA Scan') {
+    steps {
+        sh '''
+            docker run --rm -v $PWD:/src owasp/dependency-check:latest \
+              --project "TP-Jenkins" \
+              --scan /src \
+              --format HTML \
+              --failOnCVSS 7
+        '''
+    }
+}
 
-                docker run --rm -v $PWD:/src owasp/dependency-check:latest \
-                  --project "TP-Jenkins" \
-                  --scan /src \
-                  --format HTML \
-                  --failOnCVSS 7
-                '''
-            }
-        }
     }
 
     post {
