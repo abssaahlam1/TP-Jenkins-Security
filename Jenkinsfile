@@ -29,20 +29,21 @@ pipeline {
             }
         }
 
-        stage('SAST Scan') {
-            steps {
-                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
-                    sh '''
-                    . venv/bin/activate
-                    sonar-scanner \
-                        -Dsonar.projectKey=tp-jenkins-security \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://sonarqube:9000 \
-                        -Dsonar.login=$SONAR_TOKEN
-                    '''
-                }
-            }
+      stage('SAST Scan') {
+    steps {
+        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+            sh '''
+            . venv/bin/activate
+            /opt/sonar-scanner/bin/sonar-scanner \
+                -Dsonar.projectKey=tp-jenkins-security \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=http://sonarqube:9000 \
+                -Dsonar.login=$SONAR_TOKEN
+            '''
         }
+    }
+}
+
 
         stage('SCA Scan') {
     steps {
